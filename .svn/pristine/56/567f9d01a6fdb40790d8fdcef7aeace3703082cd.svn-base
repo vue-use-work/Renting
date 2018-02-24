@@ -1,0 +1,125 @@
+.west
+  width: 80px
+  border-right: 1px solid #e4e4e4
+  position: fixed
+  padding-top: 60px
+  top: 0
+  left: 0px
+  bottom: 0px
+  height: 100%
+  z-index: 10
+  color: #8798c4
+  text-align: center
+  background: #fff
+  .ul1
+    color: #333
+    margin-top: 10px
+    .li1
+      font: 14px/40px 'PingFangSC-Regulcom/ar'
+      background-size: 20px
+      cursor: pointer
+      position: relative
+      z-index: 999
+      a
+        display: block
+        color: #333
+        background-size: 12px
+        text-align:  center
+        padding-top: 40px
+        margin-top: 10px
+      .ab1
+        background: url("../assets/image/formats@2x.png") center 10px no-repeat
+        background-size: 40px
+      .ab2
+        background: url("../assets/image/service@2x.png") center 10px no-repeat
+        background-size: 40px
+      .ab3
+        background: url("../assets/image/financial@2x.png") center 10px no-repeat
+        background-size: 40px
+      .ab4
+        background: url("../assets/image/permissions@2x.png") center 10px no-repeat
+        background-size: 40px
+      .acb1
+        background: url("../assets/image/formats_w@2x.png") center 10px no-repeat #313E69
+        background-size: 40px
+        color: #fff
+      .acb2
+        background: url("../assets/image/service_w@2x.png") center 10px no-repeat
+        background-size: 40px
+      .acb3
+        background: url("../assets/image/financial_w@2x.png") center 10px no-repeat
+        background-size: 40px
+      .acb4
+        background: url("../assets/image/permissions_w@2x.png") center 10px no-repeat
+        background-size: 40px
+      .a1
+        &.active1
+          color: #fff
+          font-weight: bold
+          background-size: 40px
+          background: url("../assets/image/permissions_w@2x.png") no-repeat #313E69
+        img
+          display: block
+          margin: 10px 0 0 20px
+          width: 40px
+        span
+          text-align: center
+  .ul2
+    display: block
+    position: absolute
+    left: 80px
+    top: 0px
+    background: #313E69
+    padding: 10px 10px 20px
+    .li2
+      font: 12px/28px 'PingFangSC-Regular'
+      cursor: pointer
+      width: 120px
+      .a2
+        display: block
+        color: #fff
+        padding: 0 20px
+        font-size: 14px
+        height: 28px
+        &:hover
+          background: #1F294C
+
+.content
+  padding: 13px
+  margin: 0 300px 0 0px
+  min-width: 800px
+
+.topBar
+  font: bold 12px/40px 微软雅黑
+  border-bottom: 1px solid #ddd
+  margin: 0 0 0 0
+  color: #333
+  span
+    float: left
+  .point
+    font: bold 43px/40px '微软雅黑'
+    color: #ccc
+    line-height: 40px
+    display: inline-block
+    padding: 0 5px
+
+.el-table td,.el-table th
+  padding: 6.5px 0
+.el-table th
+  background-color: #dddddd
+.pagenation
+  display: flex
+  align-items: center
+  margin-top: 40px
+  margin-bottom: 40px
+  .el-pagination
+    display: flex
+    align-items: center
+    .el-pagination__jump
+      display: flex
+      .el-input.el-pagination__editor
+        display: flex
+        width: 60px
+        height: 28px
+        .el-input__inner
+          height: 28px !important

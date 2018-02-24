@@ -1,0 +1,81 @@
+header
+  width: 100%
+  padding: 0
+  height: 90px
+  background: #fff
+
+.data-container
+  margin: -60px 0 0 -80px
+/*background: url(../assets/image/bg.png) no-repeat*/
+
+section
+  border: #1DD4DC
+  width: 100%
+  height: 900px
+  background: url(./../assets/image/bg.png) no-repeat center top
+  position: relative
+  .box
+    img
+      width: 183px
+      height: 59px
+      position: absolute
+      top: -70px
+      left: 80px
+    position: absolute
+    left: 50%
+    top: 50%
+    margin: -150px -170px
+    width: 340px
+    height: 360px
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1)
+    background: #fff
+    h4
+      color: #000
+      font-size: 20px
+      text-align: center
+      padding: 44px 0 0px
+    .con
+      margin-top: 17px !important
+      .form-group
+        padding-left: 20px
+        margin-top: 15px
+        input
+          display: block
+          height: 40px
+          width: 280px
+          padding: 0 10px
+          font-size: 14px
+          color: #555555
+          background-color: #ffffff
+          background-image: none
+          border: 1px solid #e0e0e0
+          border-radius: 2px
+
+        #login_btn
+          height: 40px
+          width: 300px
+          text-decoration: none
+          padding: auto 0px
+          font-size: 16px
+          background: #2476E9
+          color: #ffffff
+          border: 0px
+          border-radius: 0px
+        span
+          display: flex
+          justify-content: center
+          width: 300px
+          color: #999999
+          font-size: 12px
+.bottom
+  text-align: center
+  position: fixed
+  bottom: 10px
+  left: 0
+  width: 100%
+  font-size: 12px
+  color: #999
+
+
+
+

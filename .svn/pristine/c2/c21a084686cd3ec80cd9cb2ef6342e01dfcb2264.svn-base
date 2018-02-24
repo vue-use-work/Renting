@@ -1,0 +1,237 @@
+<template>
+
+  <div class="north">
+
+    <a class="logo" href=""><img src="../assets/image/logo@2x.png" alt=""></a>
+    <div style="width: 30px; margin:0 10px; color: #333; float: right;">
+      <img style="width: 20px; height: 20px; margin-top: 20px;" src="../assets/image/new@2x.png" alt="">
+    </div>
+
+    <a href="javascript:;" @click="dialogFormVisible = true">修改密码</a>
+    <!--<el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>-->
+    <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+      <el-form :model="form">
+        <el-form-item label="活动名称" :label-width="formLabelWidth">
+          <el-input v-model="form.name" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="活动区域" :label-width="formLabelWidth">
+          <el-select v-model="form.region" placeholder="请选择活动区域">
+            <el-option label="区域一" value="shanghai"></el-option>
+            <el-option label="区域二" value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-popover
+      ref="popoverdfe"
+      placement="bottom"
+      width="100"
+      trigger="click">
+      <div class="toolWalp" style="background: red">
+        <div class="arrow"></div>
+        <div class="tool">
+          <ul>
+            <li><a href="logout" >退出登录</a></li>
+            <li onclick="modifyPassword()">修改密码</li>
+          </ul>
+        </div>
+      </div>
+    </el-popover>
+
+    <a id="dd" v-popover:popoverdfe href="javascript:void(0)" class="easyui-tooltip user" >laughing</a>
+
+
+
+
+    <!--<a class="fr" v-popover:popover1>hover 激活</a>-->
+
+    <!--<div id="modifyPassword">-->
+      <!--<div class="modifyWin">-->
+        <!--<div class="row clearfix">-->
+          <!--<label for="oldpassword">原密码：</label>-->
+          <!--<input id="oldpassword" type="password" placeholder="请输入原密码" name="oldpassword">-->
+        <!--</div>-->
+        <!--<div class="row clearfix">-->
+          <!--<label for="password">新密码：</label>-->
+          <!--<input id="password" type="password" placeholder="请输入新密码" name="password">-->
+        <!--</div>-->
+        <!--<div class="row clearfix">-->
+          <!--<label for="surePassword">确认密码：</label>-->
+          <!--<input id="surePassword" type="password" placeholder="请输入确认密码" name="surePassword">-->
+        <!--</div>-->
+        <!--<div class="bot clearfix">-->
+          <!--<a href="javascript:;" onclick="_save()">确定</a>-->
+          <!--<a href="javascript:;" onclick="javascript:layer.closeAll();">取消</a>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+
+  </div>
+
+</template>
+
+<script>
+export default {
+  name: 'HelloWorld',
+  data () {
+    return {
+      msg: 'Welcome to Your Vue.js App',
+      gridData: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }],
+      dialogTableVisible: false,
+      dialogFormVisible: false,
+      form: {
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: ''
+      },
+      formLabelWidth: '120px'
+    }
+  }
+}
+</script>
+
+<style scoped  lang="sass">
+
+
+.tool ul
+  margin-top: 25px
+  background: #313E69
+  padding: 0 5px
+  width: 130px
+  border-radius: 8px
+  display: block
+  li
+    font: 12px/40px 'PingFangSC-Regular'
+    color: #fff
+    text-align: center
+    border-bottom: 1px solid #827d7d
+    cursor: pointer
+    a
+      color: #fff
+  .cl:after, .clearfix:after
+  content: "."
+  display: block
+  height: 0
+  clear: both
+  visibility: hidden
+
+.cl, .clearfix
+  zoom: 1
+
+.north
+  height: 60px
+  background: #313E69
+  padding: 0 10px
+  position: relative
+  z-index: 100
+  .logo
+    float: left
+    padding: 14px
+    img
+      width: 57px
+      height: 32px
+  .user
+    padding: 10px 40px
+    margin: 10px 10px
+    color: #fff
+    text-align: center
+    float: right
+    font-size: 14px
+    text-decoration: none
+    position: relative
+    &:before
+      background: url(../assets/image/default_portrait.png) left center
+      content: ''
+      position: absolute
+      top: 5px
+      left: 0
+      display: block
+      width: 30px
+      height: 30px
+      background-size: 30px
+    &:after
+      background: url(../assets/image/pack_up.png) left center
+      content: ''
+      position: absolute
+      top: 15px
+      right: 11px
+      display: block
+      width: 12px
+      height: 12px
+      background-size: 12px
+.modifyWin
+  margin-top: 10px
+  .row
+    margin-top: 25px
+    label
+      width: 80px
+      text-align: right
+      font: 12px/30px '宋体'
+      float: left
+    input
+      width: 250px
+      font: 12px/30px '宋体'
+      float: left
+      padding-left: 10px
+      margin-left: 10px
+      border-radius: 2px !important
+      border: 1px solid #ccc
+  .bot
+    margin: 30px 0 0 0
+    a
+      border-radius: 2px
+      width: 120px
+      height: 30px
+      font: 14px/30px '宋体'
+      border: 1px solid #2476E9
+      float: left
+      text-align: center
+      &:first-child
+        background: #2476E9
+        color: #fff
+        margin-left: 90px
+      &:last-child
+        background: #fff
+        color: #2476E9
+        margin-left: 18px
+#modifyPassword
+  width: 400px
+  height: 350px
+  background: #eee
+  z-index: 2
+  position: relative
+.layui-layer-min, .layui-layer-max
+  display: none !important
+
+.layui-layer-title
+  border-bottom: 1px solid #2476E9 !important
+  color: #fff !important
+  background-color: #2476E9 !important
+  font-weight: bold
+</style>

@@ -1,0 +1,103 @@
+<style lang="sass" scoped>
+@import "../assets/sass/login.sass"
+#app
+  padding: 0!important
+</style>
+
+<template>
+  <div class="data-container">
+    <section>
+
+      <div class="box">
+        <img src="../assets/image/logobtn@2x.png"/>
+        <h4 style="">幸会&nbsp·&nbsp物业</h4>
+        <div class="con">
+          <div class="form-group">
+            <input type="text" v-model="userName" class="form-controls" placeholder="手机号/登录账号">
+          </div>
+          <div class="form-group">
+            <input type="password"  v-model="passwd" class="form-controls" placeholder="密码">
+          </div>
+          <div class="form-group">
+            <el-checkbox v-model="checked">记住密码</el-checkbox>
+          </div>
+          <div class="form-group">
+            <button id="login_btn" @click="login()" type="submit">登录</button>
+          </div>
+          <div class="form-group">
+            <span>联系客服：021-68746534</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+    <!--<div class="bottom">Copyright © 2017 上海申鑫电子支付股份有限公司 | ICP证: 沪ICP备16048892号</div>-->
+  </div>
+</template>
+
+<script>
+  import axios from '../http/axios'
+
+  export default {
+    data() {
+      return {
+        checked: true,
+        userName:'',
+        passwd:'',
+        roomData: [
+
+          {
+            floors: 1,
+            total: 10,
+            rooms:
+              {
+              number:'101',
+              option: {
+                yes: 1,
+                on:0
+              }
+            }
+          },
+
+          {
+            floors: 1,
+            total: 10,
+            rooms:{
+              number:'101',
+              option: {
+                yes: 1,
+                on:0
+              }
+            }
+          }
+        ]
+      }
+    },
+    created() {
+      //document.title = '首页'
+    },
+    mounted() {
+
+    },
+    methods: {
+      login:async function(){
+        let data = {
+          userName: this.userName,
+          passwd: this.passwd,
+        }
+        const resData = await axios.get('/api/login', data)
+        if (resData.code === '200') {
+          //this.$message('登录成功');
+          localStorage.setItem("token",resData.data)
+           var token = localStorage.getItem("token")
+           //this.$message(token);
+          this.$router.push({name: "home"})
+        } else {
+          this.$message('登录失败');
+        }
+      },
+    },
+    components: {}
+  }
+</script>
+

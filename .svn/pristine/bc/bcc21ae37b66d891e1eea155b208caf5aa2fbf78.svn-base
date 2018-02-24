@@ -1,0 +1,191 @@
+<style lang="sass">
+  @import "../../assets/sass/common_table"
+  @import "../../assets/sass/addApartment"
+</style>
+
+<style scoped lang="sass">
+@import "../../assets/sass/district"
+@import "../../assets/sass/common_zy"
+
+.content-right
+  top: 150px
+  left: 14px
+.content
+  padding: 13px
+  margin: 0 300px 0 0px
+  min-width: 800px
+  overflow-x: scroll
+</style>
+
+<template>
+  <div style="width: 100%;">
+    <head-top></head-top>
+    <menu-left></menu-left>
+    <!--content-->
+    <div class="" style="padding: 0 0 0 13px">
+      <h1 class="topBar clearfix">
+        <span class="fl">服务</span>
+        <span class="point">·</span>
+        <span class="fl">公司业态</span>
+      </h1>
+      <div class="data-container-ap" style="margin-left: 0">
+
+        <div class="categoryTitle">
+          <div><span class="unfocus">业态基本信息</span><span class="unfocus">房屋基本信息</span><span class="focus">完成业态新增</span>
+          </div>
+          <img src="../../assets/image/progress3.png"/>
+        </div>
+        <div class="">
+          <!--<div class="searchPanel">-->
+          <!--<div class="lists">-->
+          <!--<label for="">业态名称</label>-->
+          <!--<input class="name" style="width: 300px" name="name" placeholder="请输入业态名称">-->
+          <!--<div class="query">-->
+          <!--<img src="../assets/image/search@2x.png" alt="">-->
+          <!--<span>查询</span>-->
+          <!--</div>-->
+          <!--</div>-->
+          <!--</div>-->
+          <div class="toolBar">
+
+
+            <div class="add" @click="addorUpdate(0)">
+              <img src="../../assets/image/add@2x.png" alt="">
+              <span>新增</span>
+            </div>
+            <div class="edit" @click="addorUpdate(1)">
+              <img src="../../assets/image/editor@2x.png" alt="">
+              <span>修改</span>
+            </div>
+            <div class="delete" @click="deleteCampus()">
+              <img src="../../assets/image/delete@2x.png" alt="">
+              <span>删除</span>
+            </div>
+          </div>
+
+          <div class="dataTable">
+            <el-table ref="multipleTable" stripe border :data="tableData3" tooltip-effect="dark"
+                      row-style="" @selection-change="handleSelectionChange" @row-click="tableRowCLick">
+              <el-table-column type="selection" label="全选" width="60">
+              </el-table-column>
+              <el-table-column label="序号" prop="id" width="180">
+              </el-table-column>
+              <el-table-column prop="campusName" label="业态名称" width="200">
+              </el-table-column>
+              <el-table-column prop="roomCount" label="房间数" width="200">
+              </el-table-column>
+              <el-table-column prop="createDate" label="创建时间" width="">
+              </el-table-column>
+            </el-table>
+
+
+          </div>
+          <!--<div class="pagenation">-->
+          <!--<el-pagination background layout="prev, pager, next, jumper" :total="10">-->
+          <!--</el-pagination>-->
+          <!--</div>-->
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+
+<script>
+  import headTop from '../../components/header.vue'
+  import menuLeft from '../../components/nav.vue'
+  import axios from '../../http/axios'
+  // image el-pagination from
+  export default {
+    data() {
+      return {
+        tableData3: [],
+        multipleSelection: [],
+        selectIndex: -1,
+        token: localStorage.getItem("token"),
+        companyId: this.$route.query.companyId
+      }
+    },
+    created() {
+      //document.title = '首页'
+    },
+    mounted() {
+      this.queryRoom();
+
+    },
+    methods: {
+      reloadData() {
+        if (this.multipleSelection) {
+          this.multipleSelection.forEach(row => {
+            this.$refs.multipleTable.toggleRowSelection(row, true);
+          });
+        }
+      },
+      tableRowCLick(val) {
+        let index = this.multipleSelection.indexOf(val)
+        if (index >= 0) {
+          this.multipleSelection.splice(index, 1)
+        } else {
+          this.multipleSelection.push(val)
+          if (this.multipleSelection.length == 1) {
+            this.reloadData()
+          }
+        }
+      },
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      },
+      getImgSrc(index) {
+        if (index == this.selectIndex) {
+          return require("../../assets/image/selection_state@2x.png")
+        }
+        return require("../../assets/image/normal_state@2x.png")
+      },
+      orgnizeTagClick(index) {
+        this.selectIndex = index
+      },
+      queryRoom: async function () {
+        let data = {
+          companyId: '1001'
+        }
+        const resData = await axios.get('/api/campus/getCampus?accesstoken=' + this.token, data)
+        if (resData.code === '200') {
+          this.tableData3 = resData.data
+        }
+      },
+      addorUpdate(val) {
+        if (val == 0) {
+          this.$router.push({name: "addApart"})
+        } else {
+
+          if (this.multipleSelection.length < 1) {
+            this.$message('请选择要修改的业态');
+            return;
+          }
+          if (this.multipleSelection.length > 1) {
+            this.$message('修改的业态');
+            return;
+          }
+          this.$router.push({name: "addApart", query: {data: this.multipleSelection[0]}})
+        }
+      },
+      deleteCampus: async function () {
+
+
+        const resData = await axios.delete('/api/campus/delete/' + this.multipleSelection[0].id + "?accesstoken=" + this.token)
+        if (resData.code === '200') {
+
+          this.queryRoom();
+        } else {
+          this.$message(resData.message)
+        }
+      }
+    },
+    components: {
+      headTop,
+      menuLeft
+      // el-pagination
+    }
+  }
+</script>
+

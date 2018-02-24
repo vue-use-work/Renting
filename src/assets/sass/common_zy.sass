@@ -1,0 +1,78 @@
+html, body, h1, h2, h3, h4, h5, h6, hr, p, iframe, dl, dt, dd, ul, ol, pre, form, button, input, textarea, th, td, fieldset, label, div, a, li
+  box-sizing: border-box
+
+div.west
+  box-sizing: content-box
+.content
+  height: 100%
+  input::-webkit-input-placeholder
+    color: #ccc
+  input:-moz-placeholder
+    color: #ccc
+  input::-moz-placeholder
+    color: #ccc
+  input:-ms-input-placeholder
+    color: #ccc
+
+.content-right
+  .lists
+    display: flex
+    height: 32px
+    align-items: center
+    input
+      font: 12px/17px 'PingFangSC'
+      padding: 7px 10px
+      margin-left: 10px
+      border-radius: 2px
+      border: 1px solid #ccc
+    .name
+    .email
+    .query
+      display: flex
+      width: 100px
+      height: 32px
+      background-color: #2476E9
+      border-radius: 2px
+      justify-content: center
+      align-items: center
+      margin-left: 20px
+      cursor: pointer
+      img
+        width: 14px
+        height: 14px
+      span
+        font: 14px/20px 'PingFangSC'
+        color: white
+        margin-left: 6px
+  .searchPanel
+    margin-top: 20px
+
+.toolBar
+  display: flex
+  height: 30px
+  margin-top: 30px
+  > div
+    cursor: pointer
+    border-radius: 2px
+    &.add
+      border: 1px solid #1aad19
+      color: #1aad19
+    &.edit
+      border: 1px solid #3784f0
+      color: #3784f0
+    &.delete
+      border: 1px solid #FE493F
+      color: #FE493F
+    margin-left: 10px
+    height: 28px
+    width: 70px
+    display: flex
+    justify-content: center
+    align-items: center
+    img
+      width: 19px
+      height: 19px
+      margin-right: 4px
+.dataTable
+  margin-top: 10px
+  width: 1000px

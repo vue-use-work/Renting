@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+<span id ="span" style="width: 50px;height: 200px;"></span>
+</body>
+<script>
+  var arr = [{"Group":1,"Groupheader":"质量管理","Leftimg":"","Left":"","Min":"","Right":"","Rightimg":""},
+    {"Group":1,"Groupheader":"","Leftimg":"","Left":"","Min":"质量巡检","Right":"","Rightimg":""},
+    {"Group":2,"Groupheader":"设备管理","Leftimg":"","Left":"","Min":"","Right":"","Rightimg":""},
+    {"Group":2,"Groupheader":"","Leftimg":"","Left":"","Min":"设备专业点检","Right":"","Rightimg":""},
+    {"Group":2,"Groupheader":"","Leftimg":"","Left":"","Min":"设备日检","Right":"","Rightimg":""},
+    {"Group":2,"Groupheader":"","Leftimg":"","Left":"","Min":"设备周检","Right":"","Rightimg":""},
+    {"Group":2,"Groupheader":"","Leftimg":"","Left":"","Min":"设备月检","Right":"","Rightimg":""}];
+
+  var map = {},
+      dest = [];
+  for(var s = 0; s < arr.length; s++){
+    var ai = arr[s];
+    if(!map[ai.Group]){
+      dest.push({
+        Group: ai.Group,
+        data: [ai]
+      });
+      map[ai.Group] = ai;
+    }else{
+      for(var z = 0; z < dest.length; z++){
+        var dj = dest[z];
+        if(dj.Group == ai.Group){
+          dj.data.push(ai);
+          break;
+        }
+      }
+    }
+  }
+  console.log(dest);
+  var sapn = document.getElementById("span");
+  span.innerHTML = JSON.stringify(dest);
+</script>
+</html>

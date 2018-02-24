@@ -1,0 +1,148 @@
+
+<style scoped  lang="sass">
+
+.room-reserve
+  .con
+    .dis
+      background: #F5F9FF
+      border: 1px solid #B8D6FF
+      color: #333
+      font: 12px/30px '宋体'
+    .conform
+      margin-top: 10px
+      .row
+        margin-top: 25px
+        label
+          width: 80px
+          text-align: right
+          font: 12px/30px '宋体'
+          float: left
+        input
+          width: 250px
+          font: 12px/30px '宋体'
+          float: left
+          padding-left: 10px
+          margin-left: 10px
+          border-radius: 2px !important
+          border: 1px solid #ccc
+      .bot
+        margin: 30px 0 0 0
+        a
+          border-radius: 2px
+          width: 120px
+          height: 30px
+          font: 14px/30px '宋体'
+          border: 1px solid #2476E9
+          float: left
+          text-align: center
+          &:first-child
+            background: #2476E9
+            color: #fff
+            margin-left: 90px
+          &:last-child
+            background: #fff
+            color: #2476E9
+            margin-left: 18px
+
+
+</style>
+
+<template>
+  <div class="data-container">
+    <el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>
+
+    <el-dialog title="添加预定（普陀公寓404房间）" :visible.sync="dialogFormVisible" class="room-reserve">
+      <div class="con">
+        <p class="dis">注：预定发起后，租客有30分钟通过蘑菇租客</p>
+        <div class="modifyWin" style="margin-top: 15px">
+          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="预定人" prop="name">
+              <el-input v-model="ruleForm.name" placeholder="请输入预定人"></el-input>
+            </el-form-item>
+          </el-form>
+          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="手机号" prop="name">
+              <el-input v-model="ruleForm.name" placeholder="请输入手机号"></el-input>
+            </el-form-item>
+          </el-form>
+          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="预定金额(元)" prop="name">
+              <el-input v-model="ruleForm.name" placeholder="请输入预定金额(元)"></el-input>
+            </el-form-item>
+          </el-form>
+          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="最晚签约日" prop="name">
+              <el-input v-model="ruleForm.name" placeholder="请输入最晚签约日"></el-input>
+            </el-form-item>
+          </el-form>
+          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="租期时长" prop="name">
+              <el-input v-model="ruleForm.name" placeholder="请输入租期时长"></el-input>
+            </el-form-item>
+          </el-form>
+          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="约定租金(月)" prop="name">
+              <el-input v-model="ruleForm.name" placeholder="请输入约定租金(月)"></el-input>
+            </el-form-item>
+          </el-form>
+          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="备注" prop="name">
+              <el-input v-model="ruleForm.name" placeholder="请输入备注信息，输入后租客可见。"></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
+
+  </div>
+</template>
+
+<script>
+  export default {
+    data() {
+      return {
+        dialogTableVisible: false,
+        dialogFormVisible: true,
+        ruleForm: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        },
+        rules: {
+          name: [
+            { required: true, message: '请输入活动名称', trigger: 'blur' },
+            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          ],
+          region: [
+            { required: true, message: '请选择活动区域', trigger: 'change' }
+          ],
+          date1: [
+            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+          ],
+          date2: [
+            { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+          ],
+          type: [
+            { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+          ],
+          resource: [
+            { required: true, message: '请选择活动资源', trigger: 'change' }
+          ],
+          desc: [
+            { required: true, message: '请填写活动形式', trigger: 'blur' }
+          ]
+        }
+      };
+    }
+  };
+</script>
+

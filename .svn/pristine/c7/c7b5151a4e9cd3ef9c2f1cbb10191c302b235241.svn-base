@@ -1,0 +1,19 @@
+import 'babel-polyfill'
+import Vue from 'vue'
+import App from './App'
+import router from './router'
+import store from './store/index'
+import { currency } from './currency'
+import ElementUI from 'element-ui'
+Vue.use(ElementUI)
+
+
+Vue.config.productionTip = false
+Vue.filter('currency', currency)
+
+new Vue({
+  el: '#app',
+  store,
+  router,
+  render: h => h(App)
+})

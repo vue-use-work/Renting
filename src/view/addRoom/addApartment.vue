@@ -1,0 +1,232 @@
+<style lang="sass" scoped>
+  @import "../../assets/sass/addApartment"
+</style>
+
+<template>
+  <div style="width: 100%;">
+    <head-top></head-top>
+    <menu-left></menu-left>
+    <!--content-->
+    <div class="content2" style="padding: 0 0 0 13px">
+      <h1 class="topBar clearfix">
+        <span class="fl">业态</span>
+        <!--<span class="point">·</span>-->
+        <!--<span class="fl">长租公寓</span>-->
+        <span class="point">·</span>
+        <span class="fl">添加业态</span>
+      </h1>
+
+      <div class="data-container-ap">
+
+        <div class="categoryTitle">
+          <div><span class="focus">业态基本信息</span><span class="unfocus">房屋基本信息</span><span class="unfocus">完成业态新增</span>
+          </div>
+          <img src="../../assets/image/progress2@2x.png"/>
+        </div>
+
+        <div class="build_basic">
+          <div class="formTitle clearfix">
+            <span><h1>业态基本信息</h1></span>
+            <span>（*为必填项）</span>
+          </div>
+
+          <form>
+            <table class="table" style="border: 1px">
+              <tr>
+                <td class="tabLeft">业态类型：</td>
+                <td class="tabCenter">
+                  <el-select v-if="addType" v-model="value" placeholder="请选择">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+
+                  <el-select v-if="modifyType" v-model="value" placeholder="请选择" disabled="">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+
+                  <!--<input v-model="apartName" maxlength="30" type="text" placeholder="请输入公寓名称"/>-->
+
+                </td>
+                <td class="tabRight">*</td>
+              </tr>
+              <tr>
+                <td class="tabLeft">业态名称：</td>
+                <td class="tabCenter"><input v-model="apartName" maxlength="30" type="text" placeholder="请输入业态名称"/></td>
+                <td class="tabRight">*</td>
+              </tr>
+              <tr>
+                <td class="tabLeft">业态地址：</td>
+                <td class="tabCenter"><input v-model="apartAddress" maxlength="30" type="text" placeholder="请输入业态详细地址"/>
+                </td>
+                <td class="tabRight">*</td>
+              </tr>
+              <tr>
+                <td class="tabLeft">联系人姓名：</td>
+                <td class="tabCenter"><input v-model="contact" maxlength="10" type="text" placeholder="请输入联系人姓名"/></td>
+                <td class="tabRight">*</td>
+              </tr>
+              <tr>
+                <td class="tabLeft">手机号：</td>
+                <td class="tabCenter"><input v-model="phoneNum" maxlength="11" type="tel" placeholder="请输入联系人手机号"
+                                             @blur="checkNumBlur()"/></td>
+                <td class="tabRight">*</td>
+              </tr>
+              <tr>
+                <td class="tabLeft"></td>
+                <td class="tabCenter">
+                  <div class="btn_next">
+                    <input type="button" value="下一步" @click="addApart()"/>
+                  </div>
+                </td>
+                <td class="tabRight"></td>
+              </tr>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import headTop from '../../components/header.vue'
+  import menuLeft from '../../components/nav.vue'
+  import axios from '../../http/axios'
+
+  export default {
+    data() {
+
+      return {
+        addType: true,
+        modifyType: false,
+        options: [{
+          value: '00',
+          label: '商业楼宇'
+        }, {
+          value: '01',
+          label: '长租公寓'
+        }, {
+          value: '02',
+          label: '居民小区'
+        }],
+        value: '',
+        apartName: '',
+        apartAddress: '',
+        contact: '',
+        phoneNum: '',
+        token: sessionStorage.getItem("token")
+      }
+    },
+    created() {
+    },
+    mounted() {
+
+      let apart = this.$route.query.data
+      if (apart != null) {
+        this.apartName = apart.campusName
+        this.apartAddress = apart.address
+        this.contact = apart.linkman
+        this.phoneNum = apart.phone
+        this.value = apart.campusType
+        this.addType = false
+        this.modifyType = true;
+      }
+    },
+    methods: {
+      checkNumBlur() {
+        if (event) {
+          let phoneNum = this.phoneNum;
+          if (phoneNum.length < 11) {
+            this.$message('请输入正确的手机号码');
+            return false;
+          } else {
+            if (!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(phoneNum))) {
+              this.$message('请输入正确的手机号码');
+              return false;
+            }
+          }
+          return true;
+        }
+      },
+      checkNaN() {
+        let type = this.value;
+        if (type == "") {
+          this.$message('请选择公寓类型');
+          return false;
+        }
+        let apartName = this.apartName;
+        let apartAddress = this.apartAddress;
+        let contact = this.contact;
+        if (apartName.length == 0 | apartAddress.length == 0 | contact.length == 0) {
+          this.$message('请完善相关信息');
+          return false;
+        } else {
+          return true;
+        }
+      },
+      addApart() {
+        if (this.checkNaN() && this.checkNumBlur()) {
+          // if(this.modifyType){
+          //   this.modifyApartRequest();
+          // }
+          if(this.addType){
+            console.log("4444")
+            this.addApartRequest();
+          }
+        } else {
+          console.log("9999")
+          return;
+        }
+      },
+      addApartRequest: async function () {
+        let data = {
+          campusType: this.value,
+          // campusType: '01',
+          campusName: this.apartName,
+          linkman: this.contact,
+          phone: this.phoneNum,
+          address: this.apartAddress,
+        }
+        const resData = await axios.post('/api/campus/add?accesstoken=' + this.token, data)
+        if (resData.code === '200') {
+          let campusId = resData.data.id;
+          this.$router.push({name: "addHouse", query: {campusId: campusId}})
+        } else {
+          this.$message('添加失败');
+        }
+      },
+      modifyApartRequest: async function () {
+        let data = {
+          campusType: this.value,
+          // campusType: '01',
+          campusName: this.apartName,
+          linkman: this.contact,
+          phone: this.phoneNum,
+          address: this.apartAddress,
+        }
+        const resData = await axios.post('/api/campus/add?accesstoken=' + this.token, data)
+        if (resData.code === '200') {
+          let campusId = resData.data.id;
+          this.$router.push({name: "addHouse", query: {campusId: campusId}})
+        } else {
+          this.$message('添加失败');
+        }
+      },
+      selectThreeMenu: {}
+    },
+    components: {
+      headTop,
+      menuLeft
+    }
+  }
+</script>
+

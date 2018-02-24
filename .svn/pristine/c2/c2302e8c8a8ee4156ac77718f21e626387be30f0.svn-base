@@ -1,0 +1,481 @@
+<template>
+  <div>
+    <head-top></head-top>
+
+
+
+    <div class="west">
+      <ul class="ul1">
+        <!--有二级菜单- -->
+        <li class="li1" v-on:mouseover="overShow('yt')" v-on:mouseout="outHide('yt')">
+          <a class="ab1" :class="{acb1:showTextYt}" href="javascript:;">业态</a>
+          <ul class="ul2" v-show="showTextYt">
+            <li class="li2"><a class="active2 a2" href="javascript:;" v-on:click="chanceYt('00')">商业楼宇</a></li>
+            <li class="li2"><a class="active2 a2" href="javascript:;" v-on:click="chanceYt('01')">长租公寓</a></li>
+            <li class="li2"><a class="active2 a2" href="javascript:;" v-on:click="chanceYt('02')">居民住宅</a></li>
+            <li class="li2"><router-link class="active2 a2" :to="{ name: 'addApart', query: { campusType: '01' }}">添加业态</router-link></li>
+            <li class="li2"><router-link class="active2 a2" :to="{ name: 'company', query: { campusType: '01' }}">我的业态</router-link></li>
+          </ul>
+        </li>
+        <!--一级菜单- -->
+        <li class="li1">
+          <a class="ab2"  href="javascript:;">服务</a>
+        </li>
+        <li class="li1">
+          <a class="ab3" href="javascript:;">账务</a>
+        </li>
+        <li class="li1" v-on:mouseover="overShow('qx')" v-on:mouseout="outHide('qx')">
+          <a class="ab4" :class="{acb1:showTextQx}" href="javascript:;">权限</a>
+          <ul class="ul2" v-show="showTextQx">
+            <li class="li2"><router-link class="active2 a2" :to="{ name: 'departManage'}">部门管理</router-link></li>
+            <li class="li2"><router-link class="active2 a2" :to="{ name: 'staffManage'}">员工管理</router-link></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!--content-->
+    <div class="content" style="padding: 0 0 0 13px">
+      <h1 class="topBar clearfix">
+        <span class="fl">业态</span>
+        <span class="point">·</span>
+        <span class="fl">{{tabTwo}}</span>
+      </h1>
+      <div class="data-container">
+        <div class="no-data" v-show="noData">
+          <img src="../assets/image/no_data@2x.png" alt="">
+          <p>对不起，没有任何数据！</p>
+        </div>
+        <div class="district" v-show="!noData" v-for="(item,index) in roomList">
+          <div class="district-header clearfix">
+            <div class="fl">
+              <b class="name">{{item.campusName}}</b>
+              <span class="address">{{item.address}}</span>
+              <router-link :to="{ name: 'addHouse', query: { campusType: campusType,campusId: item.id }}">管理公寓(添加房间)</router-link>
+            </div>
+
+            <div class="fr"><span  v-if="item.roomlyRent == '0'">数据统计：出租率 {{item.roomlyRent}}%，</span>共<b>{{item.roomTotle}}</b>间</div>
+          </div>
+          <div class="district-body floors">
+            <div class="floors clearfix" v-for="(floor,index) in item.roomSort">
+
+              <div class="left">
+                <div class="con">
+                  <p>{{floor.floorName}} 层</p>
+                  <p class="p2">{{floor.floorRoomTotle}} 间</p>
+                </div>
+              </div>
+              <div class="right">
+                <div class="room-cube-container" style="z-index: 15">
+                  <div class="room-cube"  v-for="(room,index) in floor.data">
+                    <div v-if="room != ''">
+                      <el-popover
+                        placement="right"
+                        width="400"
+                        trigger="click">
+
+                        <!--roomDetail-->
+                        <div class="roomDetail">
+                          <span class="arrow"></span>
+                          <h3 class="clearfix">
+                            <p class="column1 fl">{{room.roomName}}房间信息详情</p>
+                            <p class="column2 fl">编辑操作</p>
+                          </h3>
+                          <div class="con">
+                            <div class="item clearfix">
+                              <div class="column1">
+                                <p>房源编号：{{room.roomName}}</p>
+                                <!--<p>所属模版：标准单间</p>-->
+                                <p>房间面积：{{room.roomSize}}m</p>
+                                <p>dai对外价格：1000.00元／月、押一付三</p>
+                                <p>所属业态：{{item.campusName}}</p>
+                                <p>房源地址：{{room.areaName}}</p>
+                              </div>
+                              <div class="column2">
+                                <!--<router-link :to="{ name: 'room/edit', query: { userId: '09' }}">编辑房源11</router-link>-->
+                                <router-link class="active2 a2" :to="{ name: 'roomEdit', query: { roomId: room.id, campusType: campusType}}">编辑房源</router-link>
+                              </div>
+                            </div>
+                            <div class="item clearfix">
+                              <div class="column1">
+                                <p>dai预定状态：预定成功</p>
+                                <p>dai预定人：李</p>
+                                <p>dai电话：13836457876</p>
+                                <p>dai预定金额：200元</p>
+                                <p>dai最晚签约日：2017/12/13 24:00 前</p>
+                              </div>
+                              <div class="column2">
+                                <a class="pen" href="javascript:;">dai租客登记</a>
+                                <a class="look" href="javascript:;">dai查看预定单详情</a>
+                                <a class="undo" href="javascript:;">dai撤销预定单</a>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="bot clearfix">
+                            <p class="column1 fl">{{room.roomName}}房间信息详情</p>
+                            <p class="column2 fl pen">编辑备注</p>
+                          </div>
+                        </div>
+                        <!--end roomDetail-->
+                        <!--room-->
+                        <!--NOT_ENTER    空置-->
+                        <!--SIGN_NEED_CONFIRM  合同待确认-->
+                        <!--FITMENT  装修中-->
+                        <!--NEED_CLEAN 待清扫-->
+                        <!--SIGN_EXPIRED  合同已到期-->
+                        <!--OVERDUE   欠费-->
+
+                        <div class="room_wrap"    slot="reference" v-if="room.status != null || room.status != ''">
+                          <div v-if="room.status == 'NOT_ENTER' || room.status == 'FITMENT'">
+                            <div class="state-bg  hideState state-bg2">
+                              <p class="title"><span>{{room.roomName}}</span></p>
+                              <div class="stateLabels">
+                                <div class="label green" v-show="room.status == 'NOT_ENTER'">
+                                  <em>空</em>
+                                  <span>90+</span>
+                                </div>
+                                <div class="label blue" v-show="room.status == 'FITMENT'">
+                                  <em>装</em>
+                                  <span>90+</span>
+                                </div>
+                              </div>
+                            </div>
+                            <p class="bottom">
+                              <span class="fl">￥2000</span>
+                              <span v-if="room.contract !== null" class="fr male">{{room.contract.signerName}}</span>
+                            </p>
+                          </div>
+                          <div v-else>
+                            <div class="state-bg  hideState state-bg1" >
+                              <p class="title"><span>{{room.roomName}}</span></p>
+                              <div class="stateLabels">
+                                <div class="label red" v-show="room.roomBillStatus == 'OVERDUE'">
+                                  <em>欠</em>
+                                  <span>90+</span>
+                                </div>
+                                <div class="label other" v-show="room.status == 'SIGN_NEED_CONFIRM'" >
+                                  <em>待</em>
+                                  <span>90+</span>
+                                </div>
+
+                                <div class="label yellow" v-show="room.roomBillStatus == 'TOOVERDUE'">
+                                  <em>收</em>
+                                  <span>90+</span>
+                                </div>
+                                <div class="label lightBlue" v-if="room.contract != null ">
+                                  <p v-if="room.contract.status == 'TO_SIGN_EXPIRED'" style="text-align: center; width: 100%; padding: 0">
+                                    <em>快</em>
+                                    <span>90+</span>
+                                  </p>
+                                </div>
+                                <div class="label other" v-if="room.contract != null">
+                                  <p v-if="room.contract.status == 'SIGN_EXPIRED'" style="text-align: center; width: 100%; padding: 0">
+                                    <em>已</em>
+                                    <span>90+</span>
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                            <p class="bottom">
+                              <span class="fl">￥2000</span>
+                              <span v-if="room.contract !== null" class="fr male">{{room.contract.signerName}}</span>
+                            </p>
+                          </div>
+                        </div>
+                        <!--end room-->
+
+                      </el-popover>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--aside-->
+    <div class="aside">
+      <div class="con">
+        <!--<h2 class="ch2">查看全部业态</h2>-->
+        <div class="search">
+          <p class="tit clearfix">
+            <span>当前选中房源<b style="padding: 0 3px">{{rootTotle}}</b>(间) </span>
+            <a class="clean" v-on:click="cleanName()" href="javascript:;">清空</a>
+          </p>
+          <p class="inp clearfix">
+            <a href="javascript:;" class="btn"></a>
+            <input type="text" v-model="question" placeholder="搜索公寓 / 名称">
+          </p>
+          <!--<p>{{ answer }}</p>-->
+        </div>
+
+        <div class="filterRome">
+          <h5>房间状态筛选</h5>
+          <ul class="con clearfix">
+            <li>
+              <input v-on:click="selectRoomStatus('OVERDUE')" v-model="roomStatus" name="roomStatus" id="checkItem1" value="1" type="radio">
+              <label for="checkItem1"><em class="rad">欠</em>欠费提醒</label>
+            </li>
+            <li>
+              <input v-on:click="selectRoomStatus('NOT_ENTER')" v-model="roomStatus" name="roomStatus" id="checkItem2" value="2" type="radio">
+              <label for="checkItem2"><em class="green">空</em>空房可租</label>
+            </li>
+            <li>
+              <input v-on:click="selectRoomStatus('SIGN_NEED_CONFIRM')" v-model="roomStatus" name="roomStatus" id="checkItem3" value="3" type="radio">
+              <label for="checkItem3"><em class="blue">待</em>租客待确认</label>
+            </li>
+            <li>
+              <input v-on:click="selectRoomStatus('TO_SIGN_EXPIRED')" v-model="roomStatus" name="roomStatus" id="checkItem4" value="4" type="radio">
+              <label for="checkItem4"><em class="xx">快</em>合同快到期</label>
+            </li>
+            <li>
+              <input v-on:click="selectRoomStatus('SIGN_EXPIRED')" v-model="roomStatus" name="roomStatus" id="checkItem5" value="5" type="radio">
+              <label for="checkItem5"><em class="Blue">已</em>合同已到期</label>
+            </li>
+            <li>
+              <input v-on:click="selectRoomStatus('TOOVERDUE')" v-model="roomStatus" name="roomStatus" id="checkItem6" value="6" type="radio">
+              <label for="checkItem6"><em class="yellow">收</em>收款提醒</label>
+            </li>
+          </ul>
+        </div>
+        <div class="item">
+          <h5>经营体量</h5>
+          <ul class="con">
+            <li>房源总体量<em class="blue">{{rootTotle}}</em>间</li>
+            <li>共欠租<em class="rad">{{roomOwe}}</em>间</li>
+            <li>其中空置房<em class="green">{{roomEmpty}}</em>间</li>
+            <li>总欠租<em class="rad">87</em>间</li>
+            <li>出租率<em class="blue">{{roomRent}}%</em></li>
+            <li>收租率<em class="blue">87%</em></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<script>
+  import headTop from '../components/header.vue'
+  import menuLeft from '../components/nav.vue'
+  import _ from 'lodash'
+  import axios from '../http/axios'
+  import roomjson from '../http/room.json'
+  import { mapGetters } from 'vuex'
+  function roomSort(data) {
+    //显示循环列表
+    console.log(data)
+    for(let i=0; i<data.length; i++){
+      if(data[i].room.length > 0){
+        let roomLyLength = data[i].room.length
+        let lyRentLength = data[i].room.filter(room => room.status == 1).length
+        data[i].roomlyRent = parseInt((lyRentLength/roomLyLength)*100)
+        data[i].roomTotle = roomLyLength
+        var map = {},
+          dest = [];
+        for (let j=0; j<roomLyLength; j++){
+          var ai = data[i].room[j]
+          if(!map[ai.floorName]){
+            dest.push({
+              floorName: ai.floorName,
+              data: [ai],
+              floorRoomTotle: [ai].length
+            });
+            map[ai.floorName] = ai;
+          }else{
+            for(var z = 0; z < dest.length; z++){
+              var dj = dest[z];
+              if(dj.floorName == ai.floorName){
+                dj.data.push(ai);
+                break;
+              }
+            }
+          }
+        }
+        data[i].roomSort = dest
+      }
+    }
+
+    //计算房屋总出租率
+    let allRoom = []
+    for(let i=0; i<data.length; i++){
+      if(data[i].room.length > 0){
+        let roomLength = data[i].room.length
+        for (let j=0; j<roomLength; j++){
+          allRoom.push(data[i].room[j])
+        }
+      }
+
+    }
+    let roomTotal = allRoom.length
+    let roomRent = allRoom.filter(room => room.status == 1).length
+    let roomOwe = allRoom.filter(room => room.roomBillStatus == 'OVERDUE').length
+    let roomEmpty = allRoom.filter(room => room.roomBillStatus == 'NOT_ENTER').length
+    return{
+      list: data,
+      roomRent: parseInt((roomRent/roomTotal)*100),
+      rootTotle: roomTotal,
+      roomOwe: roomOwe,
+      roomEmpty: roomEmpty
+    }
+  }
+  export default {
+    data () {
+      return {
+        roomStatus: 0,
+        room: roomjson,
+        roomList: [],
+        roomRent: '',
+        question: '',
+        rootTotle: '',
+        campusType: this.$route.query.campusType,
+        noData: false,
+        showText: false,
+        hideText: true,
+        tabTwo: '商业楼宇',
+        showTextYt: false,
+        hideTextYt: true,
+        showTextQx: false,
+        hideTextQx: true
+      }
+    },
+    created () {
+    },
+    mounted () {
+      this.getRoomInfo()
+    },
+    methods: {
+      getTabTwo (campusType) {
+        switch (campusType){
+          case '00':
+            this.tabTwo = '商业楼宇'
+            break
+          case '01':
+            this.tabTwo = '长租公寓'
+            break
+          case '02':
+            this.tabTwo = '居民住宅'
+            break
+          }
+      },
+      getRoomInfo: async function() {
+        let data = {
+          campusType : this.campusType,
+          name: _.trim(this.question)
+        }
+        const resData = await axios.get('/api/campus/getCampusRooms',data)
+        if(resData.data == ''){
+          this.noData = true
+        }else {
+          this.noData = false
+          this.roomSort = roomSort(resData.data)
+          this.roomList = this.roomSort.list
+          this.roomRent = this.roomSort.roomRent
+          this.rootTotle = this.roomSort.rootTotle
+          this.roomOwe = this.roomSort.roomOwe
+          this.roomEmpty = this.roomSort.roomEmpty
+        }
+      },
+      selectRoomStatus: async function(status) {
+        console.log(status)
+        let data = {
+          campusType : this.campusType,
+          status : status
+        }
+        const resData = await axios.get('/api/campus/getRoomsByStatus',data)
+        if(resData.data == ''){
+          this.noData = true
+        }else {
+          this.noData = false
+          this.roomSort = roomSort(resData.data)
+          this.roomList = this.roomSort.list
+          this.roomRent = this.roomSort.roomRent
+          this.rootTotle = this.roomSort.rootTotle
+        }
+      },
+      getAnswer:  _.debounce(
+        async function () {
+          this.getRoomInfo()
+        },
+        500
+      ),
+      cleanName: async function() {
+        this.question = ''
+      },
+      chanceYt (id) {
+        this.$store.dispatch('changeCampusType', id)
+        console.log("dispatch:" + id)
+        this.campusType = id
+        this.getRoomInfo()
+        this.getTabTwo(id)
+      },
+      overShow (child) {
+        if(child == 'yt'){
+          this.showTextYt = !this.showTextYt
+          this.hideTextYt = !this.hideTextYt
+        }else if(child == 'qx'){
+          this.showTextQx = !this.showTextQx
+          this.hideTextQx = !this.hideTextQx
+        }
+
+      },
+      outHide (child) {
+        if(child == 'yt'){
+          this.showTextYt = !this.showTextYt
+          this.hideTextYt = !this.hideTextYt
+        }else if(child == 'qx'){
+          this.showTextQx = !this.showTextQx
+          this.hideTextQx = !this.hideTextQx
+        }
+      }
+    },
+    watch: {
+      question () {
+        this.getAnswer()
+      }
+    },
+    components: {
+      headTop,
+      menuLeft
+    }
+  }
+</script>
+
+<style lang="sass" scoped>
+  @import "../assets/sass/common.sass"
+  @import "../assets/sass/district.sass"
+
+  .filterRome
+    cursor: pointer
+    input[type="radio"]
+      display: none
+      + label
+        display: inline-block
+        position: relative
+        padding-left: 43px
+    label::before
+      content: ""
+      display: inline-block
+      width: 14px
+      height: 14px
+      background: url(../assets/image/many_unselect@2x.png) no-repeat 0px 0px
+      background-size: 14px
+      position: absolute
+      left: 0px
+      top: 8px
+
+    input[type="radio"]:checked + label::before
+      background: url(../assets/image/many_select@2x.png) no-repeat 0px 0px
+      background-size: 14px
+
+  .btn
+    height: 30px
+    width: 30px
+    background: url("../assets/image/search@2x.png") #A9CDFF no-repeat center center
+    background-size: 15px
+    float: left
+
+</style>
+

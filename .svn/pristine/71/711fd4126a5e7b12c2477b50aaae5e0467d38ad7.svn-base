@@ -1,0 +1,288 @@
+<template>
+  <div class="zy zy-staffmanage" style="width: 100%;">
+    <head-top></head-top>
+    <menu-left></menu-left>
+    <div class="" style="padding: 0 0 0 13px">
+      <h1 class="topBar clearfix">
+        <span class="fl">权限</span>
+        <span class="point">·</span>
+        <span class="fl">{{tabTwo}}</span>
+      </h1>
+      <div class="struct-left">
+        <span class="orgnize">组织架构</span>
+        <ul>
+          <li @click="orgnizeTagClick(index)" :key="item.id" v-bind:class="{ 'notfirst': index != 0}" v-for="(item,index) in struct">
+            <img v-bind:src="getImgSrc(index)" alt=""><span>{{item.departName}}({{item.userCount}}人)</span>
+          </li>
+        </ul>
+      </div>
+      <div class="content-right">
+        <div class="searchPanel">
+          <div class="lists">
+            <label for="">搜索员工</label>
+            <input class="name" v-model="userName" name="userName" placeholder="请输员工姓名">
+            <input class="email" v-model="loginId" name="loginId" placeholder="请输入员工电话">
+            <div class="query" @click="queryData">
+              <img src="../../assets/image/search@2x.png" alt="">
+              <span>查询</span>
+            </div>
+          </div>
+        </div>
+        <div class="toolBar">
+          <div class="add" @click="pushToAdd">
+            <img src="../../assets/image/add@2x.png" alt="">
+            <span>新增</span>
+          </div>
+          <div class="edit" @click="pushToEdit">
+            <img src="../../assets/image/editor@2x.png" alt="">
+            <span>修改</span>
+          </div>
+          <div class="delete" @click="deleteUser">
+            <img src="../../assets/image/delete@2x.png" alt="">
+            <span>删除</span>
+          </div>
+        </div>
+
+          <div class="dataTable">
+            <el-table ref="multipleTable" border stripe :data="tableData3" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange" @row-click="tableRowCLick">
+              <el-table-column type="selection" label="全选" width="55">
+              </el-table-column>
+              <el-table-column label="序号" width="120">
+                <template slot-scope="scope">{{ scope.row.id }}</template>
+              </el-table-column>
+              <el-table-column prop="companyId" label="员工编号" width="100">
+              </el-table-column>
+              <el-table-column prop="userName" label="姓名" width="120">
+              </el-table-column>
+              <el-table-column prop="loginId" label="联系电话" width="120">
+              </el-table-column>
+              <el-table-column prop="remark" label="服务业态" width="100">
+              </el-table-column>
+              <el-table-column label="类型" width="100">
+                <template slot-scope="scope">{{ scope.row.type == '01' ? '运营人员':'服务人员' }}</template>
+              </el-table-column>
+              <!--<el-table-column prop="idNum" label="创建时间" width="120">
+              </el-table-column> -->
+              <el-table-column prop="idNum" label="状态" show-overflow-tooltip>
+              </el-table-column>
+            </el-table>
+        </div>
+        <div class="pagenation">
+          <el-pagination background @current-change="pageChange" layout="prev, pager, next, jumper"  :total="total">
+          </el-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+
+<script>
+  import headTop from '../../components/header.vue'
+  import menuLeft from '../../components/nav.vue'
+  import axios from '../../http/axios'
+  // image el-pagination from
+  export default {
+    data () {
+      return {
+        userName:'',
+        loginId:'',
+        token: localStorage.getItem("token"),
+        total:10,
+        tableData3: [],
+        multipleSelection: [],
+        tabTwo: '员工管理',
+        selectIndex: 0,
+        selectId: [],
+        struct:[],
+        selectedDepart:null,
+      }
+    },
+    created () {
+      //document.title = '首页'
+    },
+    mounted () {
+      this.loadData();
+      this.getDepartList()
+    },
+    methods: {
+      deleteUser: async function(){
+        if(this.multipleSelection.length == 0){
+          this.$message('请先选择员工');
+          return
+        }
+        if(this.multipleSelection.length > 0){
+          this.$confirm('确定删除员工?')
+          .then(_ => {
+            this.afterComfirmDelete()
+          })
+          .catch(_ => {});
+        }
+      },
+      afterComfirmDelete: async function(){
+        let arr = [];
+        for (let i in this.multipleSelection) {
+          arr.push(this.multipleSelection[i].id);
+        }
+        this.selectId = arr.join()
+        console.log((this.selectId).split(","))
+        let data = {
+          'ids': (this.selectId).split(",")
+        }
+        const resData = await axios.delete('api/users?accesstoken='+this.token,data)
+        if(resData.code == '200'){
+          this.$message('删除成功')
+          this.loadData();
+        }else if(resData.code == '400'){
+          this.$message(resData.msg)
+          this.loadData();
+        }
+      },
+      queryData: async function(page = 1){
+        this.loadData()
+      },
+      getDepartList: async function(){
+        const resData = await axios.get('/api/current_company/departs?accesstoken='+this.token)
+        let departList = resData.data
+        let userCount = 0
+        for (var i = 0; i < departList.length; i++) {
+          userCount += departList[i].userCount
+        }
+        departList.splice(0,0,{
+          departName:'全部',
+          userCount:userCount,
+          id:'all',
+        })
+        this.struct = departList
+      },
+      async loadDataFromDepartId(idstr){
+        this.userName = ''
+        this.loginId = ''
+        const resData = await axios.get('/api/departs/'+idstr+'/users?accesstoken='+this.token)
+        this.tableData3 = resData.data
+      },
+      loadData: async function(page = 1){
+        let data = {
+          'page':page,
+          'rows': 10,
+          'userName': this.userName,
+          'loginId': this.loginId
+        }
+        this.selectIndex = 0
+        const resData = await axios.post('/api/users/?accesstoken='+this.token,data)
+        this.tableData3 = resData.data
+        this.total = resData.total
+      },
+      reloadData() {
+        if (this.multipleSelection) {
+          this.multipleSelection.forEach(row => {
+            this.$refs.multipleTable.toggleRowSelection(row,true);
+          });
+        }
+      },
+      tableRowCLick(val){
+        let index = this.multipleSelection.indexOf(val)
+        if(index >= 0 ){
+          this.multipleSelection.splice(index,1)
+        }else{
+          this.multipleSelection.push(val)
+          if (this.multipleSelection.length == 1) {
+            this.reloadData()
+          }
+        }
+      },
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      },
+      getImgSrc(index){
+        if ( index == this.selectIndex ) {
+          return require("../../assets/image/selection_state@2x.png")
+        }
+        return require("../../assets/image/normal_state@2x.png")
+      },
+      orgnizeTagClick(index){
+        this.selectIndex = index
+        if (index == 0) {
+          this.loadData()
+        }else{
+          this.loadDataFromDepartId(this.struct[this.selectIndex].id)
+        }
+      },
+      pageChange(page){
+        console.log(arguments)
+        this.loadData(page)
+      },
+      pushToAdd(){
+        this.$router.push({ path: '/staffAdd'});
+      },
+      pushToEdit(){
+         if(this.multipleSelection.length == 0){
+          this.$message('请先选择员工');
+          return
+        }
+         if(this.multipleSelection.length > 1){
+          this.$message('请不要选择1个以上员工');
+          return
+        }
+        this.$router.push({ path: '/staffAdd',query: { staff : this.multipleSelection[0] }});
+      }
+    },
+    components: {
+      headTop,
+      menuLeft
+      // el-pagination
+    }
+  }
+</script>
+<style lang="sass">
+@import "../../assets/sass/common_table.sass"
+</style>
+
+<style scoped  lang="sass">
+  @import "../../assets/sass/district.sass"
+  @import "../../assets/sass/common_zy.sass"
+  .content-right
+    width: 800px
+    margin-left: 170px
+  .struct-left
+    position: absolute
+    background-color: #f3f3f3
+    top: 105px
+    width: 160px
+    // height: 100%
+    bottom: 0px
+    left: 90px
+    .orgnize
+      display: block
+      // background-color: green
+      font: 14px/20px "PingFangSC"
+      font-weight: 500
+      text-align: center
+      padding: 20px 0 10px
+      margin: 0 20px
+      border-bottom: 1px solid #dddddd
+    ul > li
+      position: relative
+      margin-top: 20px
+      margin-left: 20px
+      cursor: pointer
+      &.notfirst::before
+        display: block
+        width: 2px
+        height: 40px
+        background-color: #ccc
+        position: absolute
+        left: 7px
+        top: -24px
+        content: ''
+        z-index: 1
+      span
+        font: 12px/17px 'PingFangSC'
+        margin-left: 10px
+      img
+        position: relative
+        width: 15px
+        height: 15px
+        z-index: 9
+</style>
+

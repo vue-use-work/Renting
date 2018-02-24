@@ -1,0 +1,20 @@
+.el-table td,.el-table th
+  padding: 6.5px 0
+.el-table th
+  background-color: #dddddd
+.pagenation
+  display: flex
+  align-items: center
+  margin-top: 40px
+  margin-bottom: 40px
+  .el-pagination
+    display: flex
+    align-items: center
+    .el-pagination__jump
+      display: flex
+      .el-input.el-pagination__editor
+        display: flex
+        width: 60px
+        height: 28px
+        .el-input__inner
+          height: 28px !important
